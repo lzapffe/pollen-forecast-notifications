@@ -1,0 +1,41 @@
+# Place in .github/workflows/pollen-alert.yml
+name: Pollen alert
+
+on:
+  schedule:
+    # GitHub cron is UTC and ignores daylight saving time, so run at both
+    # candidate times; the R script only proceeds when it is 20:xx in Oslo.
+    - cron: "5 18 * * *"   # 20:05 in summer (CEST)
+    - cron: "5 19 * * *"   # 20:05 in winter (CET)
+  workflow_dispatch:        # manual run for testing (skips the time check)
+
+jobs:
+  pollen:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          packages: |
+            any::httr2
+            any::dplyr
+            any::purrr
+            any::tidyr
+            any::lubridate
+            any::glue
+            any::stringr
+            any::tibble
+
+      - name: Check pollen and notify
+        run: Rscript pollen_alert.R
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          NAAF_API_KEY:      ${{ secrets.NAAF_API_KEY }}
+          NAAF_API_URL:      ${{ secrets.NAAF_API_URL }}
+          GOOGLE_POLLEN_KEY: ${{ secrets.GOOGLE_POLLEN_KEY }}
+          FORCE_RUN:         ${{ github.event_name == 'workflow_dispatch' }}

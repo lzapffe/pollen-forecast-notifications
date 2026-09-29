@@ -12,3 +12,11 @@ The Google Pollen API is set as optional in the code, so if that fails or is mis
 Open-Meteo has an API that is open. NAAF requires you to pay for their API. You do this through becoming a member of NAAF and then you should get the access information to the API through the member sites. This is currently at 500 kr per year (as of 2026).
 
 The code used in the repository is largely created by Claude, Opus 5.5, at medium effort.
+
+
+To do to set it up fully for myself in January:
+- The categories set for Open-Meteo are based on Claude's guess. You can either get it to change it to just giving you the grains per m^3, which is what it provides. Or fine tune the levels to what you see in the graph at NAAF after they have registered pollen.
+- Add the Github secrets for NAAF_API_KEY and NAAF_API_URL when you get access to it. You do this in the repository by clicking "Settings", "Secrets and variables", "Actions", and "New repository secret".
+- Add a folder in the repository called ".github" and inside of that another folder called "workflows". Put the .yml file inside of this last folder. This makes the Github action actually start running.
+- Then, look through the code for any other things that need edits before running the workflow in Git
+- After having tested it (Action tab in the repository), make any desired changes to the message that gets sent to Slack
