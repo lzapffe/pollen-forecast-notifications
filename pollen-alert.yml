@@ -1,13 +1,11 @@
 # Place in .github/workflows/pollen-alert.yml
 name: Pollen alert
 
+# "on" decides WHEN the workflow runs.
 on:
-  schedule:
-    # GitHub cron is UTC and ignores daylight saving time, so run at both
-    # candidate times; the R script only proceeds when it is 20:xx in Oslo.
-    - cron: "5 18 * * *"   # 20:05 in summer (CEST)
-    - cron: "5 19 * * *"   # 20:05 in winter (CET)
-  workflow_dispatch:        # manual run for testing (skips the time check)
+  # Started every evening at 20:00 Oslo time by the central scheduler
+  # (Google Apps Script), or by hand with the "Run workflow" button.
+  workflow_dispatch:
 
 jobs:
   pollen:
